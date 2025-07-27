@@ -15,7 +15,7 @@ export class AppService {
   }
 
   async getEntity(): Promise<string> {
-    const user = await this.angRepo.findOne({ where: { id: 0 } });
+    const user = await this.angRepo.findOne({ where: { id: 1 } });
     return `Hello ${user?.name ?? 'World'}!`;
   }
 }

@@ -17,12 +17,17 @@ import { Ang } from 'ang.entity';
       database: process.env.DB_NAME,
       entities: [Ang],
       synchronize: true,
-      ssl: {
-        ca: fs.readFileSync(path.join(process.cwd(), 'rds-ca-bundle.pem')),
-        rejectUnauthorized: true,
-      },
+      ssl:
+        process.env.STAGE === 'local'
+          ? false
+          : {
+              ca: fs.readFileSync(
+                path.join(process.cwd(), 'rds-ca-bundle.pem'),
+              ),
+              rejectUnauthorized: true,
+            },
       extra: {
-        max: 1,
+        max: process.env.STAGE === 'prod' ? 5 : 1,
         min: 0,
         acquire: 30000,
         idle: 10000,

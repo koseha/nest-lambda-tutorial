@@ -7,14 +7,16 @@ provider:
   name: aws
   region: ap-northeast-2
   runtime: nodejs20.x
+  stage: ${opt:stage, 'local'}
   timeout: 60
   memorySize: 512
   environment:
-    DB_HOST: ${env:DB_HOST}
-    DB_PORT: ${env:DB_PORT}
-    DB_USERNAME: ${env:DB_USERNAME}
-    DB_PASSWORD: ${env:DB_PASSWORD}
-    DB_NAME: ${env:DB_NAME}
+    STAGE: ${self:provider.stage}
+    DB_HOST: ${self:custom.database.${self:provider.stage}.host}
+    DB_PORT: ${self:custom.database.${self:provider.stage}.port}
+    DB_USERNAME: ${self:custom.database.${self:provider.stage}.username}
+    DB_PASSWORD: ${self:custom.database.${self:provider.stage}.password}
+    DB_NAME: ${self:custom.database.${self:provider.stage}.name}
   vpc:
     securityGroupIds:
       - ${env:SECURITY_GROUP_ID}
@@ -39,3 +41,18 @@ plugins:
 package:
   include:
     - rds-ca-bundle.pem
+
+custom:
+  database:
+    local:
+      host: ${env:LOCAL_DB_HOST}
+      port: ${env:LOCAL_DB_PORT}
+      username: ${env:LOCAL_DB_USERNAME}
+      password: ${env:LOCAL_DB_PASSWORD}
+      name: ${env:LOCAL_DB_NAME}
+    prod:
+      host: ${env:PROD_DB_HOST}
+      port: ${env:PROD_DB_PORT}
+      username: ${env:PROD_DB_USERNAME}
+      password: ${env:PROD_DB_PASSWORD}
+      name: ${env:PROD_DB_NAME}

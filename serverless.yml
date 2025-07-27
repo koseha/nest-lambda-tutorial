@@ -1,0 +1,23 @@
+# /serverless.yaml
+service: nest-serverless-example
+
+frameworkVersion: '4'
+
+provider:
+  name: aws
+  region: ap-northeast-2
+  runtime: nodejs20.x
+
+functions:
+  main:
+    handler: dist/lambda.handler
+    events:
+      - http:
+          method: ANY
+          path: /
+      - http:
+          method: ANY
+          path: /{proxy+}
+
+plugins:
+  - serverless-offline

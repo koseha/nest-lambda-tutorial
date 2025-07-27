@@ -1,5 +1,5 @@
 # /serverless.yaml
-service: nest-serverless-example
+service: nest-serverless-tutorial
 
 frameworkVersion: '4'
 
@@ -7,6 +7,14 @@ provider:
   name: aws
   region: ap-northeast-2
   runtime: nodejs20.x
+  timeout: 60
+  memorySize: 512
+  vpc:
+    securityGroupIds:
+      - ${env:SECURITY_GROUP_ID}
+    subnetIds:
+      - ${env:SUBNET_ID_1}
+      - ${env:SUBNET_ID_2}
 
 functions:
   main:
@@ -21,3 +29,7 @@ functions:
 
 plugins:
   - serverless-offline
+
+package:
+  include:
+    - rds-ca-bundle.pem
